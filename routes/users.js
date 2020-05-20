@@ -32,18 +32,25 @@ router.route('/registerUser').post((req, res) => {
     const username = req.body.username;
     const email = req.body.email;
 
-    User.findOne({username: username})
+    User.findOne({email : email})
         .then((user) => {
             if (user) {
                 return res.send("User exists");
             } else {
 
                 const password = Bcrypt.hashSync(req.body.password, 10); //hash the password
-                const newUser = new User({username, email, password});
-                
-                newUser.save()
-                        .then(() => res.send('User added!'))
 
+                User.findOne({username : username})
+                    .then(user => {
+                        if (!user) {
+                            const newUser = new User({username, email, password});
+                            newUser.save()
+                            .then(() => res.send('User added!'))
+                            .catch((err) => res.status(400).send("ERROR : " + err))
+                        } else {
+                            return res.send("Username exists");
+                        }
+                    })
             }   
         })
 });
