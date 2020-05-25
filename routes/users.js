@@ -1,36 +1,8 @@
 const router = require('express').Router();
 let User = require('../models/user.model');
 const Bcrypt = require("bcryptjs");
-
-router.route('/').get((req, res) => {
-    User.find()
-        .then(users => res.json(users))
-        .catch(err => res.status(400).json('Error: ' + err));
-});
-
-router.route('/login').post((req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-
-
-    User.findOne({username : username})
-        .then((user) => {
-            if (!user) {
-                return res.status(400).send('No Such User');
-            } else {
-                Bcrypt.compare(password, user.password, (err, result) => {
-                    if (err) {
-                        return res.statis(404).send("SERVER ERROR");
-                    }
-                    if (result) {
-                        return res.status(200).send('User found!');
-                    } else {
-                        return res.status(400).send('Incorrect Password');
-                    }
-                })
-            }
-        });
-})
+const jwt = require("jsonwebtoken");
+const keys = require('../config/keys');
 
 router.route('/registerUser').post((req, res) => {
     const username = req.body.username;
@@ -49,7 +21,7 @@ router.route('/registerUser').post((req, res) => {
                         if (!user) {
                             const newUser = new User({username, email, password});
                             newUser.save()
-                            .then(() => res.status(200).send('User added!'))
+                            .then(() => res.status(200).send('Thank you for registering!'))
                             .catch((err) => res.status(400).send("ERROR : " + err))
                         } else {
                             return res.status(400).send("Username exists");
@@ -57,6 +29,33 @@ router.route('/registerUser').post((req, res) => {
                     })
             }   
         })
+});
+
+router.route('/login').post((req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+
+    User.findOne({username : username})
+        .then((user) => {
+            if (!user) {
+                return res.status(400).send('No Such User');
+            } else {
+                Bcrypt.compare(password, user.password)
+                    .then(ifMatch => {
+                        if (ifMatch) {
+                        //create JWT payload
+                        const payload = {id : user.id, name : user.username};
+                        //sign token
+                        jwt.sign(payload, keys.secretOrKey, {expiresIn: 31556926}, (err, token) => {
+                            return res.status(200).send({success : true, token : "Bearer " + token});
+                        });
+                        } else {
+                            return res.status(400).send( "Password is incorrect");
+                        }
+                    });
+            }
+        });
 });
 
 module.exports = router;
