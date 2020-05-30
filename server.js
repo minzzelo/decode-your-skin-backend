@@ -15,12 +15,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 const db = process.env.DB;
-mongoose.connect(db, {useNewUrlParser: true, useCreateIndex: true});
+mongoose.connect(db, {useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true});
 
 const connection = mongoose.connection;
 connection.once('open', () => {
     console.log("MongoDB database connection established successfully");
-})
+}) 
 
 //passport middleware
 app.use(passport.initialize());
