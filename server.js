@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+
 const users = require("./routes/users");
 const products = require("./routes/products");
 
@@ -14,6 +15,8 @@ const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: false}));
+
 
 const db = process.env.DB;
 mongoose.connect(db, {
