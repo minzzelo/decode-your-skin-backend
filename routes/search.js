@@ -46,7 +46,7 @@ router.post('/', async (req, res) => {
         return res.status(200).send({ingredients: data.ingredList, tableData: table});
 
     } catch (err) {
-        return res.status(400).send("No Such Product Found");
+        return res.status(400).send("We do not have information on this product :((");
     }
 
 })
