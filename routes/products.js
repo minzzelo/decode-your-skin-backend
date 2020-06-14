@@ -6,7 +6,7 @@ const puppeteer = require("puppeteer");
 router.route("/products").post(async (req, res) => {
   const url = req.body.url;
 
-  const browser = await puppeteer.launch({headless : false});
+  const browser = await puppeteer.launch({headless : true});
   const page = await browser.newPage();
   await page.goto(url);
 
