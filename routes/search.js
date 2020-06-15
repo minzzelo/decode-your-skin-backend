@@ -7,18 +7,20 @@ router.post('/', async (req, res) => {
     console.log(req.body.name);
     let productName = req.body.name;
 
-    //replace space with -
-    productName = productName.replace(/\s+/g, '-');
+    let url = "https://incidecoder.com/products/" + productName.replace(/\s+/g, '-');
+    let ewg = "https://www.ewg.org/skindeep/search/?utf8=%E2%9C%93&search=" +productName.replace(/\s+/g, '+');
 
-    let url = "https://incidecoder.com/products/" + productName;
+    const browser = await puppeteer.launch({headless : false});
+    const incideDecoderPage = await browser.newPage();
+   
+    await incideDecoderPage.goto(url);
 
-    const browser = await puppeteer.launch({headless : true});
-    const page = await browser.newPage();
-    await page.goto(url);
+    const ewgPage = await browser.newPage();
+    await ewgPage.goto(ewg);
 
     try {
         //extracting data
-        let data = await page.evaluate(() => {
+        let data = await incideDecoderPage.evaluate(() => {
             //div with links 
             //let ingredList = document.querySelector("#ingredlist-short");
             let ingredList = document.querySelector("#showmore-section-ingredlist-short").innerText;
@@ -27,7 +29,7 @@ router.post('/', async (req, res) => {
 
         })
 
-        let table = await page.evaluate(() => {
+        let table = await incideDecoderPage.evaluate(() => {
             //retrieve table body
             let table = document.querySelector(".product-skim tbody");
             let rows = Array.from(table.children).slice(0, 10);
@@ -41,9 +43,20 @@ router.post('/', async (req, res) => {
         
         });
 
+
+        let images = await ewgPage.evaluate(() => {
+            
+            let score = document.querySelector('.product-score > img').src;
+            let productImage = document.querySelector('.product-image-wrapper.flex > img').src;
+
+            return {score, productImage};
+        
+        });
+
         browser.close();
 
-        return res.status(200).send({ingredients: data.ingredList, tableData: table});
+        return res.status(200).send({ingredients: data.ingredList, tableData: table, 
+                                    score: images.score, image: images.productImage});
 
     } catch (err) {
         return res.status(400).send("We do not have information on this product :((");
