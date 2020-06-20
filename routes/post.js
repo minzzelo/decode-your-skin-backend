@@ -7,4 +7,6 @@ router.post("/createPost", postController.createPost);
 
 router.post("/getPost", postController.getPost);
 
+router.post("/deletePost", postController.deletePost);
+
 module.exports = router;

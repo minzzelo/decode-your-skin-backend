@@ -5,13 +5,13 @@ exports.createPost = (req, res) => {
 
   const user = req.body.user;
   const title = req.body.title;
-
-  const newPost = new Post({ user, title });
+  const description = req.body.description;
+  const newPost = new Post({ user, title, description });
 
   newPost
     .save()
     .then(() => res.status(200).send("Thank you for posting!"))
-    .catch((err) => res.status(400).send("ERROR : " + err));
+    .catch((error) => res.status(400).send("ERROR : " + error));
 };
 
 exports.getPost = (req, res) => {
@@ -28,5 +28,18 @@ exports.getPost = (req, res) => {
     } else {
       return res.status(200).send({ success: true, post });
     }
+  });
+};
+
+exports.deletePost = (req, res) => {
+  console.log(`Deleting post`);
+  const id = req.body.id;
+
+  Post.findByIdAndRemove(id, (error, doc) => {
+    if (error) throw err;
+    return res.status(200).send({
+      success: true,
+      data: doc,
+    });
   });
 };
