@@ -16,7 +16,7 @@ const productSchema = new Schema(
 
         ingredDetails: {
             type: [{}],
-        }
+        }, 
     
     }
 )
