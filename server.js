@@ -8,6 +8,7 @@ const users = require("./routes/users");
 const products = require("./routes/products");
 const searchBar = require("./routes/search");
 const post = require("./routes/post");
+const saveProduct = require("./routes/favourite");
 
 const app = express(); //create the express server
 
@@ -40,6 +41,7 @@ app.use("/users", users);
 app.use("/products", products);
 app.use("/search", searchBar);
 app.use("/post", post);
+app.use("/saveProduct", saveProduct);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

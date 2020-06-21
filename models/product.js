@@ -4,18 +4,18 @@ const Schema = mongoose.Schema;
 
 const productSchema = new Schema(
     {
-        username: {
+        name: {
             type: String, 
             required: true, 
             unique: true,
         }, 
 
-        description: {
+        ingredients: {
             type: String
         }, 
 
-        ingredients: {
-            type: String,
+        ingredDetails: {
+            type: [{}],
         }
     
     }
