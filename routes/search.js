@@ -20,12 +20,12 @@ router.post('/', async (req, res) => {
 
     try {
         //extracting data
-        let data = await incideDecoderPage.evaluate(() => {
+        let information = await incideDecoderPage.evaluate(() => {
             //div with links 
             //let ingredList = document.querySelector("#ingredlist-short");
             let ingredList = document.querySelector("#showmore-section-ingredlist-short").innerText;
-            let productDetails = document.querySelector("#product-details").innerText;
-            return {ingredList, productDetails};
+            let imageURL = document.querySelector("#product-main-image > picture > img").src;
+            return {ingredList,imageURL};
 
         })
 
@@ -43,21 +43,10 @@ router.post('/', async (req, res) => {
         
         });
 
-        /*
-        let images = await ewgPage.evaluate(() => {
-            
-            let score = document.querySelector('.product-score > img').src;
-            let productImage = document.querySelector('.product-image-wrapper.flex > img').src;
-
-            return {score, productImage};
-        
-        });
-        */
 
         browser.close();
 
-        return res.status(200).send({ingredients: data.ingredList, tableData: table, 
-                                    });
+        return res.status(200).send({information, table});
 
     } catch (err) {
         return res.status(400).send("We do not have information on this product :((");

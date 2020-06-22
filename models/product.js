@@ -17,6 +17,10 @@ const productSchema = new Schema(
         ingredDetails: {
             type: [{}],
         }, 
+
+        imageURL: {
+            type: String
+        }
     
     }
 )

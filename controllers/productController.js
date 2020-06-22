@@ -4,6 +4,7 @@ const async = require("async");
 
 //GET ALL PRODUCTS OF USER
 exports.getUserProducts = async(req, res) => {
+    
     const user = await User.findOne({username: req.params.name})
                            .populate('products'); //replace all product id with product details
 
@@ -12,9 +13,10 @@ exports.getUserProducts = async(req, res) => {
 
 //WHEN USER FAVOURITE A PRODUCT
 exports.newUserProduct = async (req, res) => {
+
     const newProduct = new Product(req.body);
     const username = req.params.name;
-    
+
     const user = await User.findOne({username : username});
 
     Product.findOne({productName: req.body.productName})
@@ -23,11 +25,13 @@ exports.newUserProduct = async (req, res) => {
                 if (!product) {
                     newProduct.save();
                 }
-            })
+            }).catch((err) => console.log(err));
 
     //add newProduct to user's product array
     user.products.push(newProduct);
-    await user.save();
+    await user.save()
+              .then(() => res.status(200).json(newProduct))
+              .catch((err) => res.status(400).send(err));
 
-    return res.status(200).json(newProduct);
+
 }
