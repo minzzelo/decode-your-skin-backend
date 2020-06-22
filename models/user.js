@@ -23,9 +23,14 @@ const userSchema = new Schema({
         required: true, 
         minlength: 8,
     }, 
-    products : [
+
+    //one to many relationship 
+    products : 
+    [
         {type : Schema.Types.ObjectId, 
-         ref : 'Product'}]
+         ref : 'Product'
+        }
+    ]
     
 });
 

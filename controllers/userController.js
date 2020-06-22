@@ -3,6 +3,8 @@ const Bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const validator = require('express-validator');
+const async = require('async');
+
 
 //VALIDATE, REGISTER USER, LOGIN USER
 
@@ -81,3 +83,11 @@ exports.loginUser = (req, res) => {
         });
     }
 }
+
+//:name?
+exports.getUser = async (req, res) => {
+    const user = await User.findOne({username: req.params.name});
+    return res.status(200).json(user);
+}
+
+

@@ -1,21 +1,33 @@
 const User = require("../models/user");
 const Product = require("../models/product");
+const async = require("async");
 
-exports.addProduct = (req, res) => {
+//GET ALL PRODUCTS OF USER
+exports.getUserProducts = async(req, res) => {
+    const user = await User.findOne({username: req.params.name})
+                           .populate('products'); //replace all product id with product details
 
-    const name = req.body.productName;
-    const ingredients = req.body.ingredients;
-    const ingredDetails = req.body.ingredDetails;
+    return res.status(200).json(user.products);
+}
 
-    const newProduct = new Product({name: name, ingredients: ingredients, ingredDetails: ingredDetails});
+//WHEN USER FAVOURITE A PRODUCT
+exports.newUserProduct = async (req, res) => {
+    const newProduct = new Product(req.body);
+    const username = req.params.name;
     
-    Product.findOne({name : name}).then((result) => {
-        if (!result) { //PRODUCT DOES NOT EXIST IN DATABASE
-            newProduct.save()
-            .then(() => res.status(200).send("Item has been Favourited!"))
-            .catch((err) => res.status(400).send("ERROR : " + err));  
-        } else {
-            res.status(200).send("Item in database!");
-        }
-    }).catch((err) => res.status(400).send("ERROR : " + err));
+    const user = await User.findOne({username : username});
+
+    Product.findOne({productName: req.body.productName})
+            .then((product) => {
+                //product does not exist in database
+                if (!product) {
+                    newProduct.save();
+                }
+            })
+
+    //add newProduct to user's product array
+    user.products.push(newProduct);
+    await user.save();
+
+    return res.status(200).json(newProduct);
 }
