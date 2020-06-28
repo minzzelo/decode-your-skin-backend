@@ -16,6 +16,14 @@ const postSchema = new Schema(
       type: String,
       required: true,
     },
+    products: {
+      type: String,
+      required: true,
+    },
+    skin_condition: {
+      type: String,
+      required: true,
+    },
   },
   { collection: "post" }
 );

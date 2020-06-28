@@ -1,12 +1,21 @@
 const Post = require("../models/post");
 
 exports.createPost = (req, res) => {
-  console.log(req.body);
-
   const user = req.body.user;
+  const date = req.body.date;
   const title = req.body.title;
   const description = req.body.description;
-  const newPost = new Post({ user, title, description });
+  const products = req.body.products;
+  const skin_condition = req.body.skin_condition;
+
+  const newPost = new Post({
+    user,
+    date,
+    title,
+    description,
+    products,
+    skin_condition,
+  });
 
   newPost
     .save()
@@ -15,24 +24,22 @@ exports.createPost = (req, res) => {
 };
 
 exports.getPost = (req, res) => {
-  console.log(`Getting posts`);
   const user = req.body.user;
 
   if (!user) {
     return res.status(400).send("No user!");
   }
 
-  Post.find({ user }).then((post) => {
-    if (!post) {
+  Post.find({ user }).then((posts) => {
+    if (!posts) {
       return res.status(400).send("No Posts");
     } else {
-      return res.status(200).send({ success: true, post });
+      return res.status(200).send({ success: true, posts });
     }
   });
 };
 
 exports.deletePost = (req, res) => {
-  console.log(`Deleting post`);
   const id = req.body.id;
 
   Post.findByIdAndRemove(id, (error, doc) => {
