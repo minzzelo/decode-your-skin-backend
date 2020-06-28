@@ -10,6 +10,10 @@ const productSchema = new Schema(
             unique: true,
         }, 
 
+        description: {
+            type: String
+        }, 
+        
         ingredients: {
             type: String
         }, 
@@ -19,6 +23,10 @@ const productSchema = new Schema(
         }, 
 
         imageURL: {
+            type: String
+        }, 
+
+        score: {
             type: String
         }
     

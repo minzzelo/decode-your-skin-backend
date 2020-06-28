@@ -20,12 +20,19 @@ router.post('/', async (req, res) => {
 
     try {
         //extracting data
+
+        let score = await ewgPage.evaluate(() => {
+            let score = document.querySelector(".product-score > img").src
+            return score;
+        })
+
         let information = await incideDecoderPage.evaluate(() => {
             //div with links 
             //let ingredList = document.querySelector("#ingredlist-short");
             let ingredList = document.querySelector("#showmore-section-ingredlist-short").innerText;
             let imageURL = document.querySelector("#product-main-image > picture > img").src;
-            return {ingredList,imageURL};
+            let description = document.querySelector("#product-details").innerText;
+            return {ingredList,imageURL, description};
 
         })
 
@@ -46,7 +53,7 @@ router.post('/', async (req, res) => {
 
         browser.close();
 
-        return res.status(200).send({information, table});
+        return res.status(200).send({score, information, table});
 
     } catch (err) {
         return res.status(400).send("We do not have information on this product :((");

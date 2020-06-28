@@ -35,3 +35,18 @@ exports.newUserProduct = async (req, res) => {
 
 
 }
+
+exports.deleteProduct = async (req, res) => {
+
+    const username = req.params.name;
+    const productid = req.params.id;
+
+
+    const user = await User.findOne({username : username});
+    user.products.pull(productid);
+
+    await user.save()
+              .then(() => res.status(200).json({success : true}))
+              .catch((err) => res.status(400).send(err));
+
+}
