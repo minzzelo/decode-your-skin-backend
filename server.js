@@ -9,6 +9,7 @@ const products = require("./routes/products");
 const searchBar = require("./routes/search");
 const post = require("./routes/post");
 const product = require("./routes/products");
+const thread = require("./routes/thread");
 
 const app = express(); //create the express server
 
@@ -42,6 +43,7 @@ app.use("/products", products);
 app.use("/search", searchBar);
 app.use("/post", post);
 app.use("/saveProduct", product);
+app.use("/thread", thread);
 
 app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);

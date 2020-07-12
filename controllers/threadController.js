@@ -1,5 +1,6 @@
-const Thread = require("../models/Thread");
-const threadPostController = require("./threadPostController");
+const Thread = require("../models/thread");
+const ThreadPostController = require("./threadPostController");
+const ThreadPost = require("../models/threadPost");
 
 exports.createThread = (req, res) => {
   const user = req.body.user;
@@ -7,20 +8,23 @@ exports.createThread = (req, res) => {
   const comment = req.body.comment;
 
   const newThread = new Thread({
-    user,
     title,
   });
 
-  const newThreadPost = threadPostController.createThreadPost({
-    user,
-    comment,
-  });
+  const threadId = newThread._id;
 
+  // Initialize thread
+  const newThreadPost = new ThreadPost({ user, comment, threadId });
+  newThreadPost
+    .save()
+    .catch((error) => res.status(400).send("ERROR : " + error));
   newThread.threadPosts.push(newThreadPost);
 
   newThread
     .save()
-    .then(() => res.status(200).send("Thank you for posting!"))
+    .then(() => {
+      res.status(200).send("Thank you for posting a thread!");
+    })
     .catch((error) => res.status(400).send("ERROR : " + error));
 };
 
@@ -31,17 +35,5 @@ exports.getAllThreads = (req, res) => {
     } else {
       return res.status(200).send({ success: true, threads });
     }
-  });
-};
-
-exports.deletePost = (req, res) => {
-  const id = req.body.id;
-
-  Post.findByIdAndRemove(id, (error, doc) => {
-    if (error) throw err;
-    return res.status(200).send({
-      success: true,
-      data: doc,
-    });
   });
 };

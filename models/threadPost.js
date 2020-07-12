@@ -11,6 +11,10 @@ const threadPostSchema = new Schema({
     type: String,
     required: true,
   },
+  threadId: {
+    type: String,
+    required: true,
+  },
 });
 
 const ThreadPost = mongoose.model("ThreadPost", threadPostSchema);
