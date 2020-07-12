@@ -2,7 +2,6 @@ const ThreadPost = require("../models/threadPost");
 const thread = require("../models/thread");
 
 exports.createThreadPost = (req, res) => {
-  console.log(req.body);
   const user = req.body.user;
   const comment = req.body.comment;
   const threadId = req.body.threadId;

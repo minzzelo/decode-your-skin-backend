@@ -7,8 +7,6 @@ router.post("/createThread", threadController.createThread);
 
 router.post("/getAllThreads", threadController.getAllThreads);
 
-// // router.post("/getPost", postController.getPost);
-
-// // router.post("/deletePost", postController.deletePost);
+router.post("/deleteThread", threadController.deleteThread);
 
 module.exports = router;

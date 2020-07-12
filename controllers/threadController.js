@@ -26,10 +26,21 @@ exports.createThread = async (req, res) => {
       res.status(200).send("Thank you for posting a thread!");
     })
     .catch((error) => res.status(400).send("ERROR : " + error));
-  console.log(newThread);
 };
 
 exports.getAllThreads = async (req, res) => {
   const threads = await Thread.find().populate("threadPosts");
   return res.status(200).send({ success: true, threads });
+};
+
+exports.deleteThread = (req, res) => {
+  const id = req.body.id;
+
+  Thread.findByIdAndRemove(id, (error, doc) => {
+    if (error) throw err;
+    return res.status(200).send({
+      success: true,
+      data: doc,
+    });
+  });
 };
