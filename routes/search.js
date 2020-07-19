@@ -22,8 +22,8 @@ router.post('/', async (req, res) => {
         //extracting data
 
         let score = await ewgPage.evaluate(() => {
-            let score = document.querySelector(".product-score > img").src
-            return score;
+            let score = document.querySelector(".product-score > img");
+            return score ? score.src : "";
         })
 
         let information = await incideDecoderPage.evaluate(() => {
